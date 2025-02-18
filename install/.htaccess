@@ -1,0 +1,16 @@
+# تأمين الدليل
+Options -Indexes +FollowSymLinks
+DirectoryIndex index.php
+
+# تفعيل محرك إعادة الكتابة
+RewriteEngine On
+
+# منع الوصول إذا تم التثبيت
+RewriteCond %{REQUEST_URI} ^/install/
+RewriteCond %{DOCUMENT_ROOT}/install.lock -f
+RewriteRule ^ / [L,R=301]
+
+# توجيه كل الطلبات إلى index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [QSA,L]

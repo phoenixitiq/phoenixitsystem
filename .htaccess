@@ -1,0 +1,22 @@
+# تمكين محرك إعادة الكتابة
+RewriteEngine On
+
+# السماح بالوصول إلى مجلد install إذا لم يكن هناك ملف install.lock
+<IfModule mod_rewrite.c>
+    RewriteBase /
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# السماح بالوصول للملفات العامة
+<FilesMatch "\.(php|css|js|png|jpg|gif|svg)$">
+    Order Allow,Deny
+    Allow from all
+    Require all granted
+</FilesMatch>
+
+# حماية الملفات الحساسة
+<FilesMatch "^(\.env|composer\.json|composer\.lock)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>

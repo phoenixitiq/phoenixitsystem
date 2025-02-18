@@ -1,0 +1,56 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # التوجيه لصفحة الخطأ 500
+    ErrorDocument 500 /errors/500.php
+    
+    # تفعيل عرض الأخطاء في بيئة التطوير
+    <If "%{HTTP_HOST} == 'localhost' || %{HTTP_HOST} == '127.0.0.1'">
+        php_flag display_errors on
+        php_value error_reporting E_ALL
+    </If>
+    
+    # منع الوصول للمجلدات الحساسة
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests)/(.*) / [L,R=301]
+
+    # التحقق من التثبيت
+    RewriteCond %{REQUEST_URI} !^/install/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/install/install.lock !-f
+    RewriteRule ^(.*)$ /install/ [R=302,L]
+
+    # توجيه كل الطلبات إلى المجلد العام
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# منع عرض محتويات المجلدات
+Options -Indexes
+
+# حماية الملفات الحساسة
+<FilesMatch "\.(env|config|json|lock|sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

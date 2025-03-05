@@ -1,0 +1,10 @@
+/* تنسيقات خاصة باللغة العربية */
+body {
+    direction: rtl;
+    text-align: right;
+}
+
+.language-switcher {
+    left: 1rem;
+    right: auto;
+} 

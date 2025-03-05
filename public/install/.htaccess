@@ -1,0 +1,255 @@
+RewriteEngine On
+RewriteBase /public/install/
+
+# إذا لم يكن ملف أو مجلد
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?step=$1 [QSA,L]
+
+# منع الوصول المباشر للمجلدات
+Options -Indexes
+
+# حماية الملفات الحساسة
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# السماح فقط بالملفات المطلوبة
+<FilesMatch "^(index\.php|ajax_handler\.php|assets/.+\.(css|js|svg|png|jpg))$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# تعيين نوع المحتوى
+AddDefaultCharset UTF-8
+
+# منع الوصول لملفات معينة
+<FilesMatch "^(install\.php|structure\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# السماح بالوصول للملفات الساكنة
+<FilesMatch "\.(css|js|svg|png|jpg|gif|ico)$">
+    Allow from all
+</FilesMatch>
+
+# تعيين نوع MIME للملفات
+AddType text/css .css
+AddType text/javascript .js
+AddType image/svg+xml .svg
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /install/
+
+    # منع الوصول المباشر للمجلدات
+    RewriteRule ^(includes|database|handlers|templates)/ - [F,L]
+    
+    # منع الوصول للملفات الحساسة
+    <FilesMatch "^\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    
+    # توجيه كل الطلبات إلى index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?step=$1 [QSA,L]
+</IfModule>
+
+# منع عرض محتويات المجلد
+Options -Indexes
+
+# إعادة توجيه جميع الطلبات إلى index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /install/
+    
+    # السماح بالوصول للملفات والمجلدات الموجودة
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # إعادة توجيه باقي الطلبات إلى index.php
+    RewriteRule ^(.*)$ index.php?step=$1 [QSA,L]
+</IfModule>
+
+# حماية الملفات الحساسة
+<FilesMatch "^(config\.php|database\.php|functions\.php)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# تعيين ترميز UTF-8
+AddDefaultCharset UTF-8
+
+# تعيين نوع MIME للملفات
+AddType application/x-httpd-php .php
+AddType text/css .css
+AddType text/javascript .js
+
+# ضغط المحتوى
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript
+</IfModule>
+
+# تعيين الترميز الافتراضي
+AddDefaultCharset UTF-8
+
+# منع الوصول إلى ملفات معينة
+<FilesMatch "^(\.env|\.gitignore|composer\.json|composer\.lock|package\.json|package-lock\.json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# تعيين التوجيه
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /install/
+
+    # منع الوصول المباشر للملفات الحساسة
+    RewriteRule ^(includes|templates|handlers|database) - [F,L]
+    RewriteRule \.(env|lock|sql|log|json|lock|example)$ - [F,L]
+
+    # توجيه الطلبات غير الموجودة إلى index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . index.php [L]
+</IfModule>
+
+# تعيين رأس HTTP الأمنية
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "DENY"
+    Header set Referrer-Policy "same-origin"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+</IfModule>
+
+# منع الوصول إلى الملفات الحساسة
+<FilesMatch "^(\.env|\.gitignore|composer\.json|package\.json|structure\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# تعيين نوع MIME للملفات
+<IfModule mod_mime.c>
+    AddType text/css .css
+    AddType text/javascript .js
+    AddType image/svg+xml .svg
+</IfModule>
+
+# تمكين ضغط المحتوى
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript
+</IfModule>
+
+# تعيين نوع MIME للملفات PHP
+AddType application/x-httpd-php .php
+
+# تعيين معالج PHP
+AddHandler application/x-httpd-php .php
+AddType application/x-httpd-php .php
+
+# منع عرض محتويات المجلدات
+Options -Indexes +FollowSymLinks
+
+# حماية الملفات الحساسة
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# توجيه الطلبات إلى index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# التأكد من معالجة ملفات PHP
+AddType application/x-httpd-php .php
+
+# تعيين ترميز UTF-8
+AddDefaultCharset UTF-8
+
+# منع عرض محتويات المجلدات
+Options -Indexes
+
+# توجيه كل الطلبات إلى index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# إعدادات PHP
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# حماية الملفات الحساسة
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Force PHP execution
+<Files *.php>
+    SetHandler application/x-httpd-php
+</Files>
+
+# Prevent direct access to certain files
+<FilesMatch "^(config\.php|functions\.php|\.htaccess)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Set default handler for PHP files
+AddHandler application/x-httpd-php .php
+
+# تفعيل محرك إعادة الكتابة
+RewriteEngine On
+RewriteBase /public/install/
+
+# التأكد من معالجة ملفات PHP
+AddType application/x-httpd-php .php
+AddHandler application/x-httpd-php .php
+
+# منع عرض محتويات المجلدات
+Options -Indexes
+
+# حماية الملفات الحساسة
+<FilesMatch "^(config\.php|functions\.php|\.htaccess)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# توجيه كل الطلبات غير الموجودة إلى index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+Options -Indexes
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "install.sql">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# منع الوصول للمجلدات مباشرة
+RewriteEngine On
+RewriteRule ^includes/ - [F,L]
+RewriteRule ^lang/ - [F,L]
+RewriteRule ^sql/ - [F,L]
+
+# تعريف معالج PHP
+AddHandler application/x-httpd-php .php
+AddType application/x-httpd-php .php
+
+# تعيين ترميز UTF-8
+AddDefaultCharset UTF-8
+
+# منع عرض محتويات المجلدات
+Options -Indexes 

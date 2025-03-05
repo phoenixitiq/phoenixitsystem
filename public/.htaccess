@@ -1,0 +1,37 @@
+RewriteEngine On
+RewriteBase /
+
+# منع الوصول للمجلدات الحساسة
+RewriteRule ^(app|resources|storage|vendor) - [F,L]
+
+# توجيه كل الطلبات إلى index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# حماية الملفات الحساسة
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# تعيين ترميز UTF-8
+AddDefaultCharset UTF-8
+DefaultLanguage ar-SA
+
+# ضغط المحتوى
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript
+</IfModule>
+
+# تعيين معالج PHP
+AddHandler application/x-httpd-php .php
+AddType application/x-httpd-php .php
+
+# تأكد من تنفيذ ملفات PHP
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# منع عرض محتويات المجلدات
+Options -Indexes +FollowSymLinks

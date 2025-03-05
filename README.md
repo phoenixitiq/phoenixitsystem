@@ -104,7 +104,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## الدعم الفني
 للمساعدة والدعم الفني:
 - البريد: support@phoenixitiq.com
-- الهاتف: +966xxxxxxxxx
+- الهاتف: +9647800533950
 
 ## الترخيص
-جميع الحقوق محفوظة © Phoenix IT 2024
+جميع الحقوق محفوظة © Phoenix IT 2025
